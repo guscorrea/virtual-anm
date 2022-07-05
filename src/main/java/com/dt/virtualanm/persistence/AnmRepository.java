@@ -1,5 +1,6 @@
 package com.dt.virtualanm.persistence;
 
+import static com.datastax.driver.core.DataType.cboolean;
 import static com.datastax.driver.core.DataType.text;
 import static com.datastax.driver.core.DataType.timestamp;
 import static com.datastax.driver.core.DataType.uuid;
@@ -39,6 +40,12 @@ public class AnmRepository {
 						.addPartitionKey("anm_id", uuid())
 						.addColumn("name", text())
 						.addColumn("anm_info", text())
+						.addColumn("pxo_valve_is_open", cboolean())
+						.addColumn("xo_valve_is_open", cboolean())
+						.addColumn("w1_valve_is_open", cboolean())
+						.addColumn("w2_valve_is_open", cboolean())
+						.addColumn("m1_valve_is_open", cboolean())
+						.addColumn("m2_valve_is_open", cboolean())
 						.addColumn("creation_date_time", timestamp()));
 	}
 

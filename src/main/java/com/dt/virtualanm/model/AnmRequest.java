@@ -8,8 +8,20 @@ import lombok.Data;
 public class AnmRequest {
 
 	@NotBlank
-	public String name;
+	private String name;
 
-	public String anmInfo;
+	private String anmInfo;
+
+	private Boolean pxoValveIsOpen;
+
+	private Boolean xoValveIsOpen;
+
+	private Boolean w1ValveIsOpen;
+
+	private Boolean w2ValveIsOpen;
+
+	private Boolean m1ValveIsOpen;
+
+	private Boolean m2ValveIsOpen;
 
 }
