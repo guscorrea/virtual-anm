@@ -30,31 +30,31 @@ public class AnmController {
 		this.anmService = anmService;
 	}
 
-	@GetMapping("/anm")
+	@GetMapping("/v1/anm")
 	public ResponseEntity<List<Anm>> listAnm() {
 		List<Anm> anmList = anmService.getAllAnms();
 		return new ResponseEntity<>(anmList, HttpStatus.OK);
 	}
 
-	@GetMapping("/anm/{id}")
+	@GetMapping("/v1/anm/{id}")
 	public ResponseEntity<Anm> getAnm(@PathVariable("id") UUID id) {
 		Anm anm = anmService.getAnm(id);
 		return new ResponseEntity<>(anm, HttpStatus.OK);
 	}
 
-	@PostMapping("/anm")
+	@PostMapping("/v1/anm")
 	public ResponseEntity<Anm> createAnm(@RequestBody @Valid AnmRequest anmRequest) {
 		Anm anm = anmService.saveAnm(anmRequest);
 		return new ResponseEntity<>(anm, HttpStatus.OK);
 	}
 
-	@PutMapping("/anm/{id}")
+	@PutMapping("/v1/anm/{id}")
 	public ResponseEntity<Anm> updateAnm(@PathVariable("id") UUID id, @RequestBody @Valid AnmRequest anmRequest) {
 		Anm updatedAnm = anmService.updateAnm(id, anmRequest);
 		return new ResponseEntity<>(updatedAnm, HttpStatus.OK);
 	}
 
-	@DeleteMapping("/anm/{id}")
+	@DeleteMapping("/v1/anm/{id}")
 	public ResponseEntity<Void> createAnm(@PathVariable("id") UUID id) {
 		anmService.deleteAnm(id);
 		return ResponseEntity.noContent().build();
