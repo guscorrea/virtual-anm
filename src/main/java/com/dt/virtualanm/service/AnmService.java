@@ -17,8 +17,10 @@ import com.dt.virtualanm.model.AnmRequest;
 import com.dt.virtualanm.model.ComponentTopics;
 import com.dt.virtualanm.persistence.AnmRepository;
 import com.dt.virtualanm.persistence.entity.Anm;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class AnmService {
 
 	@Resource
@@ -38,13 +40,14 @@ public class AnmService {
 	public Anm getAnm(UUID id) {
 		Anm anm = anmRepository.find(id);
 		if (Objects.isNull(anm)) {
+			log.error("Anm with id {] not found in the DB", id);
 			throw new AnmNotFoundException("Anm with id " + id.toString() + " not found in the database.");
 		}
 		return anm;
 	}
 
 	public Anm saveAnm(AnmRequest anmRequest) {
-		System.out.println("Creating ANM with name " + anmRequest.getName());
+		log.info("Creating ANM with name {}", anmRequest.getName());
 		Anm anm = Anm.builder()
 				.anmId(UUID.randomUUID())
 				.name(anmRequest.getName())
@@ -57,7 +60,7 @@ public class AnmService {
 
 	public Anm updateAnm(UUID id, AnmRequest anmRequest) {
 		Anm anm = getAnm(id);
-		System.out.println("Updating ANM with id " + id);
+		log.info("Updating ANM with id {}", id);
 		anm.setName(anmRequest.getName());
 		anm.setAnmInfo(StringUtils.defaultIfEmpty(anmRequest.getAnmInfo(), anm.getAnmInfo()));
 		anm.setPxoValveIsOpen(Objects.isNull(anmRequest.getPxoValveIsOpen()) ? anm.isPxoValveIsOpen() : anmRequest.getPxoValveIsOpen());
@@ -70,7 +73,7 @@ public class AnmService {
 	}
 
 	public void deleteAnm(UUID id) {
-		System.out.println("Deleting ANM with id " + id);
+		log.info("Deleting ANM with id {}", id);
 		anmRepository.delete(id);
 		removeDefaultTopics(id);
 	}
@@ -79,21 +82,22 @@ public class AnmService {
 		ComponentTopics newComponentTopics = new ComponentTopics(anm.getAnmId().toString());
 
 		String temperatureTopic = newComponentTopics.getTemperatureTopicName();
-		System.out.println("Adding new topic: " + temperatureTopic);
+		log.info("Adding new topic: {}", temperatureTopic);
 		mqttConfig.adapter.addTopic(temperatureTopic, 2);
 
 		String pressureTopic = newComponentTopics.getPressureTopicName();
-		System.out.println("Adding new topic: " + pressureTopic);
+		log.info("Adding new topic: {}", pressureTopic);
 		mqttConfig.adapter.addTopic(pressureTopic, 2);
 
 		String customTopic = newComponentTopics.getCustomTopicName();
-		System.out.println("Adding new topic: " + customTopic);
+		log.info("Adding new topic: {}", customTopic);
 		mqttConfig.adapter.addTopic(customTopic, 2);
 
 	}
 
 	private void removeDefaultTopics(UUID id) {
 		ComponentTopics componentTopics = new ComponentTopics(id.toString());
+		log.info("Removing default topics for: {}", id);
 		mqttConfig.adapter.removeTopic(componentTopics.getTemperatureTopicName(),
 				componentTopics.getPressureTopicName(),
 				componentTopics.getCustomTopicName());
