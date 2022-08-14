@@ -40,7 +40,7 @@ public class AnmService {
 	public Anm getAnm(UUID id) {
 		Anm anm = anmRepository.find(id);
 		if (Objects.isNull(anm)) {
-			log.error("Anm with id {] not found in the DB", id);
+			log.error("Anm with id {} not found in the DB", id);
 			throw new AnmNotFoundException("Anm with id " + id.toString() + " not found in the database.");
 		}
 		return anm;
