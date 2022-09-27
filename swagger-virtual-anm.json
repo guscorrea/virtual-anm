@@ -1,0 +1,734 @@
+{
+	"openapi": "3.0.1",
+	"info": {
+		"title": "Virtual ANM",
+		"description": "The virtual ANM microservice represents the Wet Christmas Tree (Árvore de Natal Molhada in Portuguese), which is an assembly of valves that regulate the flow stream of pipes in an oil well. The ANM is also connected to the wellhead and controls access to the tubing as the well begins pumping oil. The ANM resource also models a series of valves present in the flow path, such as master valve M1 and M2, wing valve W1 and W2, and cross-over valve XO and PXO. When the POST creation method is invoked, all master and wing valves are set with the value open as default, and all the cross-over valves are set with the value closed. These values, however, can be changed using the update PUT method.",
+		"version": "1.0.0"
+	},
+	"servers": [
+		{
+			"url": "http://localhost:8084",
+			"description": "Local Docker deployment URL"
+		}
+	],
+	"paths": {
+		"/v1/anm/{id}": {
+			"get": {
+				"tags": [
+					"ANM"
+				],
+				"summary": "Retrieves a ANM.",
+				"description": "Retrieves a ANM resource with a given UUID.",
+				"operationId": "getAnm",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "The ANM was retrieved.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Anm"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "The request failed validation.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string",
+									"example": "Invalid UUID string"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "The ANM was not found in the DB.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string",
+									"example": "Anm with id c5f2f64c-b02d-4635-8a34-c3d4cc2d955b not found in the database."
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"ANM"
+				],
+				"summary": "Updates a ANM resource",
+				"description": "Sends a put request, validates input data, checks if the current resource exists, and saves the updated resource into the Scylla database.",
+				"operationId": "updateAnm",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AnmRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "ANM resource was updated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Anm"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "The request failed validation.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string",
+									"example": "Field name: must not be null"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "The ANM was not found in the DB.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string",
+									"example": "Anm with id c5f2f64c-b02d-4635-8a34-c3d4cc2d955b not found in the database."
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Unexpected error occurred",
+						"content": {
+							"application/json": {}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"ANM"
+				],
+				"summary": "Deletes a ANM resource",
+				"description": "Deletes a ANM resource with given UUID.",
+				"operationId": "createAnm_1",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "The ANM was deleted."
+					}
+				}
+			}
+		},
+		"/v1/anm": {
+			"get": {
+				"tags": [
+					"ANM"
+				],
+				"summary": "Retrieves all ANMs.",
+				"description": "Retrieves all ANM resources in a list.",
+				"operationId": "listAnm",
+				"responses": {
+					"200": {
+						"description": "The list of ANMs was retrieved.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Anm"
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"ANM"
+				],
+				"summary": "Creates a ANM resource",
+				"description": "Sends a post request, validates input data, and saves the generated resource into the Scylla database.",
+				"operationId": "createAnm",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AnmRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "ANM resource was created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Anm"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "The request failed validation.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string",
+									"example": "Field name: must not be null"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Unexpected error occurred",
+						"content": {
+							"application/json": {}
+						}
+					}
+				}
+			}
+		},
+		"/v1/temperature": {
+			"get": {
+				"tags": [
+					"Temperature"
+				],
+				"summary": "Retrieves all temperature resources.",
+				"description": "Retrieves all temperature resources in a list.",
+				"operationId": "listTemperature",
+				"responses": {
+					"200": {
+						"description": "The list of temperature resources was retrieved.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Temperature"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/temperature/{id}": {
+			"get": {
+				"tags": [
+					"Temperature"
+				],
+				"summary": "Retrieves all temperature resources by UUID.",
+				"description": "Retrieves all temperature resources in a list, filtered by UUID. Start date and time can also be used as optional filtering parameters.",
+				"operationId": "getTemperature",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "startDateTime",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "endDateTime",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "The list of temperature resources was retrieved.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Temperature"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "The request failed validation.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string",
+									"example": "Invalid UUID string"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/pressure": {
+			"get": {
+				"tags": [
+					"Pressure"
+				],
+				"summary": "Retrieves all pressure resources.",
+				"description": "Retrieves all pressure resources in a list.",
+				"operationId": "listPressure",
+				"responses": {
+					"200": {
+						"description": "The list of pressure resources was retrieved.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Pressure"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/pressure/{id}": {
+			"get": {
+				"tags": [
+					"Pressure"
+				],
+				"summary": "Retrieves all pressure resources by UUID.",
+				"description": "Retrieves all pressure resources in a list, filtered by UUID. Start date and time can also be used as optional filtering parameters.",
+				"operationId": "getPressure",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "startDateTime",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "endDateTime",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "The list of pressure resources was retrieved.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Pressure"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "The request failed validation.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string",
+									"example": "Invalid UUID string"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/measure": {
+			"get": {
+				"tags": [
+					"Custom Measure"
+				],
+				"summary": "Retrieves all custom measures.",
+				"description": "Retrieves all custom measure resources in a list.",
+				"operationId": "listMeasures",
+				"responses": {
+					"200": {
+						"description": "The list of custom measures was retrieved.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/CustomMeasure"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/measure/{id}": {
+			"get": {
+				"tags": [
+					"Custom Measure"
+				],
+				"summary": "Retrieves a custom measure.",
+				"description": "Retrieves a custom measure resource with a given UUID.",
+				"operationId": "getMeasure",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "The custom measure was retrieved.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/CustomMeasure"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "The request failed validation.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string",
+									"example": "Invalid UUID string"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/measure/{id}/property/{propertyName}": {
+			"get": {
+				"tags": [
+					"Custom Measure"
+				],
+				"summary": "Retrieves all custom measures by property.",
+				"description": "Retrieves all custom measure resources in a list, filtered by UUID and a given property name. Start date and time can also be used as optional filtering parameters.",
+				"operationId": "getMeasureByProperty",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "propertyName",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "startDateTime",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "endDateTime",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "The list of custom measures was retrieved.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/CustomMeasure"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "The request failed validation.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string",
+									"example": "Invalid UUID string"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"Anm": {
+				"required": [
+					"name"
+				],
+				"type": "object",
+				"properties": {
+					"anmId": {
+						"type": "string",
+						"description": "The virtual ANM unique identifier",
+						"format": "uuid",
+						"example": "ccf9e52b-e2e4-45d8-8884-0721d3246a53"
+					},
+					"name": {
+						"type": "string",
+						"description": "The name of the ANM resource",
+						"example": "ANM #1"
+					},
+					"anmInfo": {
+						"type": "string",
+						"description": "Additional information for ANM resource",
+						"example": "Additional info"
+					},
+					"pxoValveIsOpen": {
+						"type": "boolean",
+						"description": "PXO Valve open (true) or closed (false) status",
+						"default": false
+					},
+					"xoValveIsOpen": {
+						"type": "boolean",
+						"description": "XO Valve open (true) or closed (false) status",
+						"default": false
+					},
+					"w1ValveIsOpen": {
+						"type": "boolean",
+						"description": "W1 Valve open (true) or closed (false) status",
+						"default": true
+					},
+					"w2ValveIsOpen": {
+						"type": "boolean",
+						"description": "W2 Valve open (true) or closed (false) status",
+						"default": true
+					},
+					"m1ValveIsOpen": {
+						"type": "boolean",
+						"description": "M1 Valve open (true) or closed (false) status",
+						"default": true
+					},
+					"m2ValveIsOpen": {
+						"type": "boolean",
+						"description": "M2 Valve open (true) or closed (false) status",
+						"default": true
+					},
+					"creationDateTime": {
+						"type": "string",
+						"description": "Resource creation date and time",
+						"format": "date-time"
+					}
+				},
+				"description": "ANM resource"
+			},
+			"AnmRequest": {
+				"required": [
+					"name"
+				],
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"description": "The name of the ANM resource",
+						"example": "ANM #1"
+					},
+					"anmInfo": {
+						"type": "string",
+						"description": "Additional information for ANM resource",
+						"example": "Additional info"
+					},
+					"pxoValveIsOpen": {
+						"type": "boolean",
+						"description": "PXO Valve open (true) or closed (false) status",
+						"default": false
+					},
+					"xoValveIsOpen": {
+						"type": "boolean",
+						"description": "XO Valve open (true) or closed (false) status",
+						"default": false
+					},
+					"w1ValveIsOpen": {
+						"type": "boolean",
+						"description": "W1 Valve open (true) or closed (false) status",
+						"default": true
+					},
+					"w2ValveIsOpen": {
+						"type": "boolean",
+						"description": "W2 Valve open (true) or closed (false) status",
+						"default": true
+					},
+					"m1ValveIsOpen": {
+						"type": "boolean",
+						"description": "M1 Valve open (true) or closed (false) status",
+						"default": true
+					},
+					"m2ValveIsOpen": {
+						"type": "boolean",
+						"description": "M2 Valve open (true) or closed (false) status",
+						"default": true
+					}
+				},
+				"description": "ANM request"
+			},
+			"Temperature": {
+				"type": "object",
+				"properties": {
+					"anmId": {
+						"type": "string",
+						"description": "The virtual ANM unique identifier",
+						"format": "uuid",
+						"example": "ccf9e52b-e2e4-45d8-8884-0721d3246a53"
+					},
+					"timestamp": {
+						"type": "string",
+						"description": "Data generation timestamp",
+						"format": "date-time"
+					},
+					"value": {
+						"type": "string",
+						"description": "Measured value",
+						"example": "36.2421"
+					}
+				}
+			},
+			"Pressure": {
+				"type": "object",
+				"properties": {
+					"anmId": {
+						"type": "string",
+						"description": "The virtual ANM unique identifier",
+						"format": "uuid",
+						"example": "ccf9e52b-e2e4-45d8-8884-0721d3246a53"
+					},
+					"timestamp": {
+						"type": "string",
+						"description": "Data generation timestamp",
+						"format": "date-time"
+					},
+					"value": {
+						"type": "string",
+						"description": "Measured value",
+						"example": "36.2421"
+					}
+				},
+				"description": "Pressure resource"
+			},
+			"CustomMeasure": {
+				"type": "object",
+				"properties": {
+					"anmId": {
+						"type": "string",
+						"description": "The virtual ANM unique identifier",
+						"format": "uuid",
+						"example": "ccf9e52b-e2e4-45d8-8884-0721d3246a53"
+					},
+					"propertyType": {
+						"type": "string",
+						"description": "Name of the custom measure property",
+						"example": "Density"
+					},
+					"timestamp": {
+						"type": "string",
+						"description": "Data generation timestamp",
+						"format": "date-time"
+					},
+					"value": {
+						"type": "string",
+						"description": "Measured value",
+						"example": "36.2421"
+					}
+				},
+				"description": "Custom Measure resource"
+			}
+		}
+	}
+}
